@@ -58,4 +58,11 @@ const authSlice = createSlice({
 });
 
 export const { logout, clearAuthError } = authSlice.actions;
+
+// Derived flags, so there is a single source of truth (`status`).
+type WithAuth = { auth: AuthState };
+export const selectIsAuthenticated = (state: WithAuth): boolean =>
+  state.auth.status === AuthStatus.Authenticated;
+export const selectIsAuthLoading = (state: WithAuth): boolean =>
+  state.auth.status === AuthStatus.Authenticating;
 export default authSlice.reducer;

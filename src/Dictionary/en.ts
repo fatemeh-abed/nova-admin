@@ -26,9 +26,11 @@ export const en: Dictionary = {
     title: 'Admin Panel',
     username: 'Username',
     password: 'Password',
-    login: 'Log in',
+    login: 'Sign in',
     logout: 'Log out',
-    forgotPassword: 'Forgot your password?',
+    subtitle: 'Sign in to your admin account to continue.',
+    signingIn: 'Signing in...',
+    mockNotice: 'Demo only: authentication runs against FakeStoreAPI, a mock service.',
   },
   dashboard: {
     title: 'Dashboard',

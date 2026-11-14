@@ -28,7 +28,9 @@ export const fa: Dictionary = {
     password: 'رمز عبور',
     login: 'ورود',
     logout: 'خروج',
-    forgotPassword: 'رمز عبور خود را فراموش کرده‌اید؟',
+    subtitle: 'برای ادامه وارد حساب مدیریتی خود شوید.',
+    signingIn: 'در حال ورود...',
+    mockNotice: 'نسخه نمایشی: احراز هویت از طریق FakeStoreAPI و صرفاً آزمایشی است.',
   },
   dashboard: {
     title: 'داشبورد',

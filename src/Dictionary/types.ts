@@ -28,7 +28,9 @@ export interface Dictionary {
     password: string;
     login: string;
     logout: string;
-    forgotPassword: string;
+    subtitle: string;
+    signingIn: string;
+    mockNotice: string;
   };
   dashboard: {
     title: string;
