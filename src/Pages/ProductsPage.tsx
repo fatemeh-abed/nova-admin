@@ -1,6 +1,9 @@
 import PagePlaceholder from '../Shared/PagePlaceholder';
-import { dictionary } from '../Dictionary';
+import { useDictionary } from '../Shared/useDictionary';
 
-const ProductsPage = () => <PagePlaceholder title={dictionary.nav.products} />;
+const ProductsPage = () => {
+  const { navigation } = useDictionary();
+  return <PagePlaceholder title={navigation.products} />;
+};
 
 export default ProductsPage;

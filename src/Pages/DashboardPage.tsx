@@ -1,6 +1,9 @@
 import PagePlaceholder from '../Shared/PagePlaceholder';
-import { dictionary } from '../Dictionary';
+import { useDictionary } from '../Shared/useDictionary';
 
-const DashboardPage = () => <PagePlaceholder title={dictionary.nav.dashboard} />;
+const DashboardPage = () => {
+  const { navigation } = useDictionary();
+  return <PagePlaceholder title={navigation.dashboard} />;
+};
 
 export default DashboardPage;

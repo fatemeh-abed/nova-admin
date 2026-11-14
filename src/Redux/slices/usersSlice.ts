@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { createUser, getUsers } from '../../Utils/services/userService';
-import { getErrorMessage } from '../../Utils/api/apiError';
+import { getErrorCode } from '../../Utils/api/apiError';
+import type { ApiErrorCode } from '../../types/Enums/ApiErrorCode';
 import { getNextId } from '../../Utils/getNextId';
 import { RequestStatus } from '../../types/Enums/RequestStatus';
 import type { ListState } from '../../types/api.types';
@@ -12,24 +13,24 @@ const initialState: ListState<User> = {
   error: null,
 };
 
-export const fetchUsers = createAsyncThunk<User[], void, { rejectValue: string }>(
+export const fetchUsers = createAsyncThunk<User[], void, { rejectValue: ApiErrorCode }>(
   'users/fetch',
   async (_, { rejectWithValue }) => {
     try {
       return await getUsers();
     } catch (error) {
-      return rejectWithValue(getErrorMessage(error));
+      return rejectWithValue(getErrorCode(error));
     }
   },
 );
 
-export const addUser = createAsyncThunk<User, CreateUserRequest, { rejectValue: string }>(
+export const addUser = createAsyncThunk<User, CreateUserRequest, { rejectValue: ApiErrorCode }>(
   'users/add',
   async (payload, { rejectWithValue }) => {
     try {
       return await createUser(payload);
     } catch (error) {
-      return rejectWithValue(getErrorMessage(error));
+      return rejectWithValue(getErrorCode(error));
     }
   },
 );

@@ -1,14 +1,13 @@
 import styled from 'styled-components';
 import NovaLogo from '../Shared/NovaLogo';
 import PagePlaceholder from '../Shared/PagePlaceholder';
-import { dictionary } from '../Dictionary';
+import { useDictionary } from '../Shared/useDictionary';
 
 const Center = styled.main`
   min-height: 100vh;
   display: grid;
   place-items: center;
-  background: var(--nova-navy);
-  color: var(--nova-navy);
+  background: ${({ theme }) => theme.colors.sidebarBackground};
 `;
 
 const Box = styled.div`
@@ -16,19 +15,24 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  background: var(--nova-surface);
-  padding: 32px;
-  border-radius: var(--nova-radius);
+  gap: ${({ theme }) => theme.spacing.md};
+  background: ${({ theme }) => theme.colors.surface};
+  color: ${({ theme }) => theme.colors.text};
+  padding: ${({ theme }) => theme.spacing.xl};
+  border-radius: ${({ theme }) => theme.radius.md};
 `;
 
-const LoginPage = () => (
-  <Center>
-    <Box>
-      <NovaLogo size={34} />
-      <PagePlaceholder title={dictionary.placeholder.login} />
-    </Box>
-  </Center>
-);
+const LoginPage = () => {
+  const { authentication } = useDictionary();
+
+  return (
+    <Center>
+      <Box>
+        <NovaLogo size={34} />
+        <PagePlaceholder title={authentication.title} />
+      </Box>
+    </Center>
+  );
+};
 
 export default LoginPage;

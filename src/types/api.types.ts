@@ -1,7 +1,8 @@
+import type { ApiErrorCode } from './Enums/ApiErrorCode';
 import type { RequestStatus } from './Enums/RequestStatus';
 
 export interface ApiErrorShape {
-  message: string;
+  code: ApiErrorCode;
   status?: number;
 }
 
@@ -9,5 +10,5 @@ export interface ApiErrorShape {
 export interface ListState<T> {
   items: T[];
   status: RequestStatus;
-  error: string | null;
+  error: ApiErrorCode | null;
 }

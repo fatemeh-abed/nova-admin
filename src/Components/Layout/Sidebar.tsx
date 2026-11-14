@@ -1,22 +1,20 @@
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import NovaLogo from '../../Shared/NovaLogo';
-import { dictionary } from '../../Dictionary';
+import { useDictionary } from '../../Shared/useDictionary';
 import { AppRoute } from '../../types/Enums/AppRoute';
-
-export const SIDEBAR_WIDTH = 240;
 
 const Aside = styled.aside`
   position: fixed;
   inset-block: 0;
   inset-inline-start: 0;
-  width: ${SIDEBAR_WIDTH}px;
-  background: var(--nova-navy);
-  color: #fff;
-  padding: 24px 16px;
+  width: ${({ theme }) => theme.layout.sidebarWidth};
+  background: ${({ theme }) => theme.colors.sidebarBackground};
+  color: ${({ theme }) => theme.colors.sidebarActiveText};
+  padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing.md};
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: ${({ theme }) => theme.spacing.xl};
 `;
 
 const Nav = styled.nav`
@@ -27,33 +25,36 @@ const Nav = styled.nav`
 
 const Item = styled(NavLink)`
   padding: 12px 14px;
-  border-radius: 10px;
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 15px;
+  border-radius: ${({ theme }) => theme.radius.sm};
+  color: ${({ theme }) => theme.colors.sidebarText};
+  font-size: ${({ theme }) => theme.fontSizes.md};
 
   &.active {
-    background: #2563eb;
-    color: #fff;
+    background: ${({ theme }) => theme.colors.highlight};
+    color: ${({ theme }) => theme.colors.sidebarActiveText};
   }
 `;
 
-const navItems = [
-  { to: AppRoute.Dashboard, label: dictionary.nav.dashboard, end: true },
-  { to: AppRoute.Products, label: dictionary.nav.products, end: false },
-  { to: AppRoute.Users, label: dictionary.nav.users, end: false },
-];
+const Sidebar = () => {
+  const { navigation } = useDictionary();
+  const navItems = [
+    { to: AppRoute.Dashboard, label: navigation.dashboard, end: true },
+    { to: AppRoute.Products, label: navigation.products, end: false },
+    { to: AppRoute.Users, label: navigation.users, end: false },
+  ];
 
-const Sidebar = () => (
-  <Aside>
-    <NovaLogo size={30} />
-    <Nav>
-      {navItems.map((item) => (
-        <Item key={item.to} to={item.to} end={item.end}>
-          {item.label}
-        </Item>
-      ))}
-    </Nav>
-  </Aside>
-);
+  return (
+    <Aside>
+      <NovaLogo size={30} />
+      <Nav>
+        {navItems.map((item) => (
+          <Item key={item.to} to={item.to} end={item.end}>
+            {item.label}
+          </Item>
+        ))}
+      </Nav>
+    </Aside>
+  );
+};
 
 export default Sidebar;

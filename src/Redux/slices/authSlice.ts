@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { login } from '../../Utils/services/authService';
-import { getErrorMessage } from '../../Utils/api/apiError';
+import { getErrorCode } from '../../Utils/api/apiError';
+import type { ApiErrorCode } from '../../types/Enums/ApiErrorCode';
 import { AuthStatus } from '../../types/Enums/AuthStatus';
 import type { AuthState, LoginCredentials } from '../../types/auth.types';
 
@@ -17,14 +18,14 @@ interface LoginResult {
 }
 
 // Credentials are passed to the service only; they are never stored in state.
-export const loginThunk = createAsyncThunk<LoginResult, LoginCredentials, { rejectValue: string }>(
+export const loginThunk = createAsyncThunk<LoginResult, LoginCredentials, { rejectValue: ApiErrorCode }>(
   'auth/login',
   async (credentials, { rejectWithValue }) => {
     try {
       const { token } = await login(credentials);
       return { token, username: credentials.username };
     } catch (error) {
-      return rejectWithValue(getErrorMessage(error));
+      return rejectWithValue(getErrorCode(error));
     }
   },
 );

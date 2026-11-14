@@ -1,6 +1,9 @@
 import PagePlaceholder from '../Shared/PagePlaceholder';
-import { dictionary } from '../Dictionary';
+import { useDictionary } from '../Shared/useDictionary';
 
-const UsersPage = () => <PagePlaceholder title={dictionary.nav.users} />;
+const UsersPage = () => {
+  const { navigation } = useDictionary();
+  return <PagePlaceholder title={navigation.users} />;
+};
 
 export default UsersPage;

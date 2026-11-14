@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Language } from '../../types/Enums/Language';
-import { Theme } from '../../types/Enums/Theme';
+import { loadPreferences } from '../../Storage/preferences';
+import type { Language } from '../../types/Enums/Language';
+import type { Theme } from '../../types/Enums/Theme';
 
 interface UiState {
   theme: Theme;
@@ -9,10 +10,9 @@ interface UiState {
   isSidebarOpen: boolean;
 }
 
-// Defaults only. Persistence and applying them to the UI belong to Phase 3.
+// Redux is the source of truth; localStorage is read once here and written by the store subscriber.
 const initialState: UiState = {
-  theme: Theme.Light,
-  language: Language.Persian,
+  ...loadPreferences(),
   isSidebarOpen: true,
 };
 

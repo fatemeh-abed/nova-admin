@@ -1,3 +1,4 @@
+import type { ApiErrorCode } from './Enums/ApiErrorCode';
 import type { AuthStatus } from './Enums/AuthStatus';
 
 export interface LoginCredentials {
@@ -13,5 +14,5 @@ export interface AuthState {
   status: AuthStatus;
   token: string | null; // kept in memory only, never persisted
   username: string | null;
-  error: string | null;
+  error: ApiErrorCode | null;
 }

@@ -1,16 +1,19 @@
 import styled from 'styled-components';
-import { dictionary } from '../../Dictionary';
+import { useDictionary } from '../../Shared/useDictionary';
 
 const Bar = styled.header`
-  height: 72px;
+  height: ${({ theme }) => theme.layout.headerHeight};
   display: flex;
   align-items: center;
-  padding-inline: 32px;
-  background: var(--nova-surface);
-  border-bottom: 1px solid var(--nova-border);
-  font-weight: 600;
+  padding-inline: ${({ theme }) => theme.spacing.xl};
+  background: ${({ theme }) => theme.colors.surface};
+  border-block-end: 1px solid ${({ theme }) => theme.colors.border};
+  font-weight: ${({ theme }) => theme.fontWeights.semibold};
 `;
 
-const Header = () => <Bar>{dictionary.welcome}</Bar>;
+const Header = () => {
+  const { common } = useDictionary();
+  return <Bar>{common.welcome}</Bar>;
+};
 
 export default Header;
