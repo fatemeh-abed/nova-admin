@@ -3,7 +3,7 @@ import type { Dictionary } from './types';
 export const fa: Dictionary = {
   common: {
     brand: 'NOVA',
-    welcome: 'خوش آمدید، مدیر سیستم',
+    welcome: 'خوش آمدید',
     loading: 'در حال بارگذاری...',
     retry: 'تلاش مجدد',
     search: 'جستجو',

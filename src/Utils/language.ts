@@ -7,3 +7,11 @@ const directionByLanguage: Record<Language, Direction> = {
 };
 
 export const getDirection = (language: Language): Direction => directionByLanguage[language];
+
+const localeByLanguage: Record<Language, string> = {
+  [Language.Persian]: 'fa-IR',
+  [Language.English]: 'en-US',
+};
+
+export const formatNumber = (value: number, language: Language): string =>
+  new Intl.NumberFormat(localeByLanguage[language]).format(value);
