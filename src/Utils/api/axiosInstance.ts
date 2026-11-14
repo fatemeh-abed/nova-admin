@@ -8,8 +8,17 @@ export const setAuthToken = (token: string | null): void => {
   authToken = token;
 };
 
+const baseURL: string | undefined = import.meta.env.VITE_API_BASE_URL;
+
+if (!baseURL) {
+  // Without it Axios sends requests to this app's own origin and every call fails with a 404.
+  console.error(
+    'VITE_API_BASE_URL is not set. Copy .env.example to .env and restart the dev server.',
+  );
+}
+
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL,
   timeout: 10_000,
   headers: { 'Content-Type': 'application/json' },
 });
