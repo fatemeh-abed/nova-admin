@@ -32,3 +32,10 @@ Build check: `npm run build`.
 - POST requests do not persist; created products/users live only in the current session's Redux state.
 - Newly created users cannot be assumed to authenticate.
 - No real pagination; it is done client-side.
+
+## Phase 6 — Visual refinement and products
+
+The sidebar, dashboard summary cards, and product management UI were updated.
+Products are fetched using the existing Axios instance, searched and paginated locally (7 per page), and created through Formik/Yup. Successful POST results are added to the current Redux list only; FakeStoreAPI does not persist them. Rating is shown when provided by the API, and a dash is shown for new products. The product form is a modal and does not introduce a new route.
+
+**Verification note:** Dependencies could not be installed in the execution environment (offline npm cache lacked required packages). TypeScript build and interactive browser verification remain pending. Run `npm install && npm run build && npm run dev` on a network-enabled machine before approving the phase.

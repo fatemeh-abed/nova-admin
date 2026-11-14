@@ -18,12 +18,14 @@ const Bar = styled.header`
 
 const Welcome = styled.div`
   font-weight: ${({ theme }) => theme.fontWeights.semibold};
+  font-size: 14px;
+  font-size: 14px;
 `;
 
 const Controls = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
+  gap: 12px;
 `;
 
 const Header = () => {

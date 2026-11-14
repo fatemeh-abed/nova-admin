@@ -39,6 +39,8 @@ export interface Dictionary {
     shortcuts: string;
   };
   products: {
+    previousPage: string;
+    nextPage: string;
     title: string;
     addProduct: string;
     searchPlaceholder: string;

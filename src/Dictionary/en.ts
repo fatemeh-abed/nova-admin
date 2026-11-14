@@ -41,6 +41,8 @@ export const en: Dictionary = {
   products: {
     title: 'Products',
     addProduct: 'Add product',
+    previousPage: 'Previous page',
+    nextPage: 'Next page',
     searchPlaceholder: 'Search products...',
     image: 'Image',
     productTitle: 'Product title',

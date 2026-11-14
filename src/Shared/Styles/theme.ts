@@ -42,7 +42,7 @@ const tokens = {
   spacing: { xs: '4px', sm: '8px', md: '16px', lg: '24px', xl: '32px', xxl: '48px' },
   radius: { sm: '8px', md: '14px', lg: '20px', pill: '999px' },
   breakpoints: { desktop: '1280px' },
-  layout: { sidebarWidth: '240px', headerHeight: '72px', minWidth: '1280px' },
+  layout: { sidebarWidth: '210px', headerHeight: '68px', minWidth: '1280px' },
 };
 
 export type AppTheme = typeof tokens &

@@ -41,6 +41,8 @@ export const fa: Dictionary = {
   products: {
     title: 'محصولات',
     addProduct: 'افزودن محصول',
+    previousPage: 'صفحه قبل',
+    nextPage: 'صفحه بعد',
     searchPlaceholder: 'جستجو در محصولات...',
     image: 'تصویر',
     productTitle: 'عنوان محصول',
