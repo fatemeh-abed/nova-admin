@@ -8,6 +8,12 @@ export const dictionary = {
     products: 'محصولات',
     users: 'کاربران',
   },
+  errors: {
+    network: 'ارتباط با سرور برقرار نشد.',
+    timeout: 'زمان پاسخ‌دهی سرور به پایان رسید.',
+    unauthorized: 'نام کاربری یا رمز عبور نادرست است.',
+    unknown: 'خطای ناشناخته‌ای رخ داد.',
+  },
   placeholder: {
     comingSoon: 'این بخش در فازهای بعدی پیاده‌سازی می‌شود.',
     login: 'ورود',
