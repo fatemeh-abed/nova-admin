@@ -1,4 +1,4 @@
-import type { ApiErrorCode } from '../types/Enums/ApiErrorCode';
+import type { ApiErrorCode } from "../types/Enums/ApiErrorCode";
 
 export interface Dictionary {
   common: {
@@ -39,6 +39,21 @@ export interface Dictionary {
     shortcuts: string;
   };
   products: {
+    categoryElectronics: string;
+    categoryJewelery: string;
+    categoryMensClothing: string;
+    categoryWomensClothing: string;
+
+    productTitlePlaceholder: string;
+    categoryPlaceholder: string;
+    pricePlaceholder: string;
+    imageUrlPlaceholder: string;
+    descriptionPlaceholder: string;
+    priceUnit: string;
+    selectImage: string;
+    imagePreview: string;
+    invalidImageFile: string;
+
     previousPage: string;
     nextPage: string;
     title: string;
@@ -54,6 +69,8 @@ export interface Dictionary {
     empty: string;
   };
   users: {
+    fullName: string;
+    noSearchResults: string;
     title: string;
     addUser: string;
     searchPlaceholder: string;
@@ -76,6 +93,8 @@ export interface Dictionary {
     adminProfile: string;
   };
   validation: {
+    invalidPhone: string;
+    passwordMinLength: string;
     required: string;
     invalidEmail: string;
     invalidUrl: string;

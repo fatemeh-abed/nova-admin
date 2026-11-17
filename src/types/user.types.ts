@@ -45,3 +45,12 @@ export interface CreateUserRequest {
 export interface CreateUserResponse {
   id: number;
 }
+
+export interface CreateUserFormValues {
+  firstname: string;
+  lastname: string;
+  username: string;
+  email: string;
+  password: string;
+  phone: string;
+}

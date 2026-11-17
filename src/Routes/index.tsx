@@ -1,12 +1,13 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
-import AdminLayout from '../Components/Layout/AdminLayout';
-import DashboardPage from '../Pages/DashboardPage';
-import LoginPage from '../Pages/LoginPage';
-import ProductsPage from '../Pages/ProductsPage';
-import UsersPage from '../Pages/UsersPage';
-import { AppRoute } from '../types/Enums/AppRoute';
-import ProtectedRoute from './ProtectedRoute';
-import PublicRoute from './PublicRoute';
+import { Navigate, Route, Routes } from "react-router-dom";
+import AdminLayout from "../Components/Layout/AdminLayout";
+import DashboardPage from "../Pages/DashboardPage";
+import LoginPage from "../Pages/LoginPage";
+import ProductsPage from "../Pages/ProductsPage";
+import UsersPage from "../Pages/UsersPage";
+import { AppRoute } from "../types/Enums/AppRoute";
+import ProtectedRoute from "./ProtectedRoute";
+import PublicRoute from "./PublicRoute";
+import SettingsPage from "../Pages/SettingsPage";
 
 // Single place where routes and their access rules are declared.
 const AppRoutes = () => (
@@ -19,6 +20,7 @@ const AppRoutes = () => (
         <Route path={AppRoute.Dashboard} element={<DashboardPage />} />
         <Route path={AppRoute.Products} element={<ProductsPage />} />
         <Route path={AppRoute.Users} element={<UsersPage />} />
+        <Route path={AppRoute.Settings} element={<SettingsPage />} />
       </Route>
     </Route>
     <Route path="*" element={<Navigate to={AppRoute.Dashboard} replace />} />

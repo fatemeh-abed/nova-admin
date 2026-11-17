@@ -1,22 +1,186 @@
-import { useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
-import { useAppDispatch, useAppSelector } from '../Redux/hooks';
-import { fetchProducts } from '../Redux/slices/productsSlice';
-import { useDictionary } from '../Shared/useDictionary';
-import { Icon } from '../Shared/Icons';
-import Button from '../Shared/Button';
-import CreateProductModal from '../Components/Products/CreateProductModal';
-import { RequestStatus } from '../types/Enums/RequestStatus';
-import { ApiErrorCode } from '../types/Enums/ApiErrorCode';
-import { formatNumber } from '../Utils/language';
-const Top=styled.div`display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;h1{margin:0;font-size:24px;}`;
-const Panel=styled.section`background:${({theme})=>theme.colors.surface};border:1px solid ${({theme})=>theme.colors.border};border-radius:${({theme})=>theme.radius.md};box-shadow:${({theme})=>theme.shadows.sm};overflow:hidden;`;
-const Toolbar=styled.div`display:flex;align-items:center;justify-content:space-between;padding:20px;border-bottom:1px solid ${({theme})=>theme.colors.border};`;
-const Search=styled.label`display:flex;align-items:center;gap:9px;padding:0 13px;border:1px solid ${({theme})=>theme.colors.border};border-radius:9px;color:${({theme})=>theme.colors.textMuted};input{width:310px;height:42px;border:0;background:transparent;color:${({theme})=>theme.colors.text};font:inherit;outline:none;}`;
-const Table=styled.table`width:100%;border-collapse:collapse;text-align:start;th,td{padding:14px 18px;border-bottom:1px solid ${({theme})=>theme.colors.border};text-align:start;}th{font-size:13px;background:${({theme})=>theme.colors.surfaceAlt};color:${({theme})=>theme.colors.textMuted};font-weight:700;}td{font-size:14px;}tbody tr:hover{background:${({theme})=>theme.colors.surfaceAlt};}`;
-const Thumb=styled.img`width:46px;height:46px;object-fit:contain;border:1px solid ${({theme})=>theme.colors.border};border-radius:8px;background:white;padding:4px;`;
-const Pagination=styled.div`display:flex;justify-content:center;align-items:center;gap:8px;padding:18px;button{border:1px solid ${({theme})=>theme.colors.border};border-radius:7px;padding:8px 13px;background:${({theme})=>theme.colors.surface};color:${({theme})=>theme.colors.text};cursor:pointer;&:disabled{opacity:.4;cursor:not-allowed;}}`;
-const Message=styled.div`padding:36px;text-align:center;color:${({theme})=>theme.colors.textMuted};`;
-const Notice=styled.div`padding:12px 18px;margin-bottom:16px;background:${({theme})=>theme.colors.surface};border:1px solid ${({theme})=>theme.colors.success};border-radius:9px;`;
-const PAGE_SIZE=7;
-export default function ProductsPage(){const d=useDictionary();const dispatch=useAppDispatch();const {items,status,error}=useAppSelector(s=>s.products);const language=useAppSelector(s=>s.ui.language);const [search,setSearch]=useState('');const [page,setPage]=useState(1);const [open,setOpen]=useState(false);const [success,setSuccess]=useState(false);useEffect(()=>{if(status===RequestStatus.Idle)void dispatch(fetchProducts())},[dispatch,status]);const filtered=useMemo(()=>items.filter(p=>(p.title+' '+p.category+' '+p.description).toLocaleLowerCase().includes(search.trim().toLocaleLowerCase())),[items,search]);const pages=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE));const current=Math.min(page,pages);const visible=filtered.slice((current-1)*PAGE_SIZE,current*PAGE_SIZE);return <><Top><h1>{d.products.title}</h1><Button type="button" onClick={()=>setOpen(true)}><Icon name="plus" size={17}/> {d.products.addProduct}</Button></Top>{success&&<Notice role="status">{d.messages.productCreated}</Notice>}<Panel><Toolbar><Search><Icon name="search" size={19}/><input value={search} onChange={e=>{setSearch(e.target.value);setPage(1)}} placeholder={d.products.searchPlaceholder} aria-label={d.products.searchPlaceholder}/></Search></Toolbar>{status===RequestStatus.Loading||status===RequestStatus.Idle?<Message>{d.common.loading}</Message>:status===RequestStatus.Failed?<Message role="alert">{d.messages.errors[error??ApiErrorCode.Unknown]} <Button type="button" onClick={()=>void dispatch(fetchProducts())}>{d.common.retry}</Button></Message>:filtered.length===0?<Message>{d.products.empty}</Message>:<><Table><thead><tr><th>{d.products.image}</th><th>{d.products.productTitle}</th><th>{d.products.category}</th><th>{d.products.price}</th><th>{d.products.rating}</th></tr></thead><tbody>{visible.map(p=><tr key={p.id}><td><Thumb src={p.image} alt={p.title} loading="lazy"/></td><td>{p.title}</td><td>{p.category}</td><td>{formatNumber(p.price,language)}</td><td>{p.rating?formatNumber(p.rating.rate,language):'—'}</td></tr>)}</tbody></Table><Pagination><button type="button" disabled={current===1} onClick={()=>setPage(current-1)} aria-label={d.products.previousPage}>‹</button><span>{formatNumber(current,language)} / {formatNumber(pages,language)}</span><button type="button" disabled={current===pages} onClick={()=>setPage(current+1)} aria-label={d.products.nextPage}>›</button></Pagination></>}</Panel>{open&&<CreateProductModal onClose={()=>setOpen(false)} onSuccess={()=>{setOpen(false);setSuccess(true);setSearch('');setPage(1)}}/>}</>}
+import { useEffect, useMemo, useState } from "react";
+
+import styled from "styled-components";
+
+import { useAppDispatch, useAppSelector } from "../Redux/hooks";
+import { fetchProducts } from "../Redux/slices/productsSlice";
+
+import Button from "../Shared/Button";
+import { Icon } from "../Shared/Icons";
+import { useDictionary } from "../Shared/useDictionary";
+import SearchInput from "../Shared/SearchInput";
+import Pagination from "../Shared/Pagination";
+
+import CreateProductModal from "../Modals/CreateProductModal";
+
+import ProductsTable from "../Components/Products/ProductsTable";
+
+import { ApiErrorCode } from "../types/Enums/ApiErrorCode";
+import { RequestStatus } from "../types/Enums/RequestStatus";
+
+import { productTranslations } from "../Utils/productTranslations";
+
+const Top = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+  h1 {
+    margin: 0;
+    font-size: 24px;
+  }
+`;
+const AddProductButton = styled(Button)`
+  border-radius: 9px;
+`;
+
+const Panel = styled.section`
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radius.md};
+  box-shadow: ${({ theme }) => theme.shadows.sm};
+  overflow: hidden;
+`;
+const Toolbar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+const Message = styled.div`
+  padding: 36px;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.textMuted};
+`;
+const Notice = styled.div`
+  padding: 12px 18px;
+  margin-bottom: 16px;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.success};
+  border-radius: 9px;
+`;
+
+const PAGE_SIZE = 7;
+export default function ProductsPage() {
+  const d = useDictionary();
+  const dispatch = useAppDispatch();
+  const { items, status, error } = useAppSelector((s) => s.products);
+  const language = useAppSelector((s) => s.ui.language);
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [open, setOpen] = useState(false);
+  const [success, setSuccess] = useState(false);
+  useEffect(() => {
+    if (status === RequestStatus.Idle) void dispatch(fetchProducts());
+  }, [dispatch, status]);
+
+  const filtered = useMemo(() => {
+    const normalize = (value: string) =>
+      value
+        .toLocaleLowerCase()
+        .replace(/ي/g, "ی")
+        .replace(/ك/g, "ک")
+        .replace(/\u200c/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    const query = normalize(search);
+
+    if (!query) return items;
+
+    return items.filter((p) => {
+      const persianTitle = productTranslations[p.id] ?? "";
+
+      const searchableText = [
+        p.title,
+        persianTitle,
+        p.category,
+        p.description ?? "",
+        String(p.price),
+      ].join(" ");
+
+      return normalize(searchableText).includes(query);
+    });
+  }, [items, search]);
+
+  const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const current = Math.min(page, pages);
+  const visible = filtered.slice(
+    (current - 1) * PAGE_SIZE,
+    current * PAGE_SIZE,
+  );
+  return (
+    <>
+      <Top>
+        <h1>{d.products.title}</h1>
+      </Top>
+      {success && <Notice role="status">{d.messages.productCreated}</Notice>}
+      <Panel>
+        <Toolbar>
+          <SearchInput
+            value={search}
+            placeholder={d.products.searchPlaceholder}
+            onChange={(value) => {
+              setSearch(value);
+              setPage(1);
+            }}
+          />
+
+          <AddProductButton type="button" onClick={() => setOpen(true)}>
+            <Icon name="plus" size={17} />
+            {d.products.addProduct}
+          </AddProductButton>
+        </Toolbar>
+
+        {status === RequestStatus.Loading || status === RequestStatus.Idle ? (
+          <Message>{d.common.loading}</Message>
+        ) : status === RequestStatus.Failed ? (
+          <Message role="alert">
+            {d.messages.errors[error ?? ApiErrorCode.Unknown]}{" "}
+            <Button
+              type="button"
+              onClick={() => void dispatch(fetchProducts())}
+            >
+              {d.common.retry}
+            </Button>
+          </Message>
+        ) : filtered.length === 0 ? (
+          <Message>{d.products.empty}</Message>
+        ) : (
+          <>
+            <ProductsTable products={visible} />
+
+            <Pagination
+              currentPage={current}
+              totalPages={pages}
+              language={language}
+              onPageChange={setPage}
+              ariaLabel="صفحه‌بندی محصولات"
+              previousLabel="صفحه قبل"
+              nextLabel="صفحه بعد"
+            />
+          </>
+        )}
+      </Panel>
+      {open && (
+        <CreateProductModal
+          onClose={() => setOpen(false)}
+          onSuccess={() => {
+            setOpen(false);
+            setSuccess(true);
+            setSearch("");
+            setPage(1);
+          }}
+        />
+      )}
+    </>
+  );
+}

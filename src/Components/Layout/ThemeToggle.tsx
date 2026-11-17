@@ -1,57 +1,94 @@
-import styled from 'styled-components';
-import { useDictionary } from '../../Shared/useDictionary';
-import { useAppDispatch, useAppSelector } from '../../Redux/hooks';
-import { setTheme } from '../../Redux/slices/uiSlice';
-import { Theme } from '../../types/Enums/Theme';
+import styled from "styled-components";
+import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
+import { setTheme } from "../../Redux/slices/uiSlice";
+import { Theme } from "../../types/Enums/Theme";
 
-const IconButton = styled.button`
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: 50%;
-  background: transparent;
-  color: ${({ theme }) => theme.colors.text};
-  cursor: pointer;
+const Switch = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 82px;
+  height: 34px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  direction: ltr;
 `;
 
-const MoonIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
-  </svg>
-);
+const Indicator = styled.span<{ $dark: boolean }>`
+  position: absolute;
+  top: 3px;
+  left: ${({ $dark }) => ($dark ? "3px" : "43px")};
+  width: 34px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  transition: left 0.25s ease;
+  pointer-events: none;
+`;
 
-const SunIcon = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    aria-hidden="true"
-  >
-    <circle cx="12" cy="12" r="4" />
-    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-  </svg>
-);
+const Option = styled.button`
+  position: relative;
+  z-index: 1;
+  width: 50%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0;
 
-const ThemeToggle = () => {
+  svg {
+    width: 17px;
+    height: 17px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.accent};
+    outline-offset: 2px;
+    border-radius: 50%;
+  }
+`;
+
+export default function ThemeToggle() {
   const dispatch = useAppDispatch();
-  const current = useAppSelector((state) => state.ui.theme);
-  const { settings } = useDictionary();
-
-  const isDark = current === Theme.Dark;
-  const next = isDark ? Theme.Light : Theme.Dark;
-  const label = `${settings.theme}: ${isDark ? settings.lightTheme : settings.darkTheme}`;
+  const theme = useAppSelector((state) => state.ui.theme);
+  const isDark = theme === Theme.Dark;
 
   return (
-    <IconButton type="button" title={label} aria-label={label} onClick={() => dispatch(setTheme(next))}>
-      {isDark ? <SunIcon /> : <MoonIcon />}
-    </IconButton>
-  );
-};
+    <Switch role="group" aria-label="Theme">
+      <Indicator $dark={isDark} />
 
-export default ThemeToggle;
+      <Option
+        type="button"
+        aria-label="Dark mode"
+        aria-pressed={isDark}
+        onClick={() => dispatch(setTheme(Theme.Dark))}
+      >
+        <svg viewBox="0 0 24 24">
+          <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z" />
+        </svg>
+      </Option>
+
+      <Option
+        type="button"
+        aria-label="Light mode"
+        aria-pressed={!isDark}
+        onClick={() => dispatch(setTheme(Theme.Light))}
+      >
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42" />
+        </svg>
+      </Option>
+    </Switch>
+  );
+}
