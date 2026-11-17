@@ -337,7 +337,7 @@ Token دریافتی برای مدیریت وضعیت ورود در این پر�
 ### دریافت پروژه
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/fatemeh-abed/nova-admin
 cd nova-admin
 ```
 
